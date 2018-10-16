@@ -161,16 +161,17 @@
     NSString *title = ([DDYLocalAuthTool checkSupportLocalIDType]==DDYLocalIDTypeFaceID) ? titleFaceID : titleTouchID;
     
     LAContext *context = [[LAContext alloc] init];
-    context.localizedFallbackTitle = TitleFallback;
     
     if (@available(iOS 9.0, *)) {
         if ([context canEvaluatePolicy:LAPolicyDeviceOwnerAuthentication error:nil]) {
             [context evaluatePolicy:LAPolicyDeviceOwnerAuthentication localizedReason:title reply:handleResult];
+            [context setLocalizedFallbackTitle:TitleFallback];
         } else {
             callback(DDYLocalAuthStateNotSupport);
         }
     } else {
         if ([context canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:nil]) {
+            [context setLocalizedFallbackTitle:TitleFallback];
             [context evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics localizedReason:title reply:handleResult];
         } else {
             callback(DDYLocalAuthStateNotSupport);
